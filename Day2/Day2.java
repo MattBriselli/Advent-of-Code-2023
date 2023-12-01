@@ -26,4 +26,5 @@ public class Day2 {
         line = reader.readLine();
 
         return total;
+    }
 }
