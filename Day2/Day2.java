@@ -11,15 +11,15 @@ public class Day2 {
         BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day2/List"));
 //        BufferedReader testReader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day2/Test"));
 
-        int total = 0;
-        total = iterate(reader, total);
+        int total = iterate(reader);
 
         System.out.println(total);
     }
 
-    private static int iterate(BufferedReader reader, int total) throws IOException {
+    private static int iterate(BufferedReader reader) throws IOException {
         ArrayList<String> list = new ArrayList<>();
         String line = reader.readLine();
+        int total = 0;
 
         // Do stuff
 
