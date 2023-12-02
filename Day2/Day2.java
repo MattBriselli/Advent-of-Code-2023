@@ -29,10 +29,7 @@ public class Day2 {
         int blueStock = 0;
         int gameTotal = 0;
 
-        // Do stuff
-
         while (line != null) {
-            System.out.println(line);
             String[] rounds = line.split(":")[1].split(",");
 
             for (String round : rounds) {
@@ -55,7 +52,6 @@ public class Day2 {
                             greenStock += number;
                             break;
                     }
-                    System.out.println(blueStock + " : " + greenStock + " : " + redStock);
                     if (minBlue < blueStock) {
                         minBlue = blueStock;
                     }
@@ -71,7 +67,6 @@ public class Day2 {
                     blueStock = 0;
                 }
             }
-            System.out.println(minBlue + " : " + minGreen + " : " + minRed);
             gameTotal += (minBlue * minGreen * minRed);
 
             minBlue = 0;
