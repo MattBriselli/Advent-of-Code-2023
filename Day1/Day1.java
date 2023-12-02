@@ -27,7 +27,6 @@ public class Day1 {
             char[] lineArr = line.toCharArray();
             for (int i = 0; i < lineArr.length; i++) {
                 char l = lineArr[i];
-                System.out.println(l);
                 if (Character.isDigit(l)) {
                     if (first == -1) {
                         first = Integer.parseInt(Character.toString(l));
@@ -36,8 +35,6 @@ public class Day1 {
                     }
                 } else if (startsWord(l)) {
                     switch (l) {
-
-//     letters: one, two, three, four, five, six, seven, eight, and nine also count as
                         case 'o':
                             if (lineArr.length >= i+2 && lineArr[i+1] == 'n' && lineArr[i+2] == 'e') {
                                 if (first == -1) {
