@@ -118,16 +118,9 @@ public class Day1 {
         return total;
     }
     private static boolean startsWord(char l) {
-        switch (l) {
-            case 'o':
-            case 't':
-            case 'f':
-            case 's':
-            case 'e':
-            case 'n':
-                return true;
-            default:
-            return false;
-        }
+        return switch (l) {
+            case 'o', 't', 'f', 's', 'e', 'n' -> true;
+            default -> false;
+        };
     }
 }
