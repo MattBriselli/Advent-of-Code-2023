@@ -1,12 +1,8 @@
 package main.java.org.adventofcode2023.Day3;
 
-import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Day3 {
 
