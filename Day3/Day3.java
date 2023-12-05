@@ -51,7 +51,6 @@ public class Day3 {
 //                    }
 //                }
 //                if (!wordNum.isEmpty()) {
-//                    System.out.println(wordNum);
 //                    int num = Integer.parseInt(wordNum.toString());
 //                    if (connectedToChar(num, board, i, j, newJ)) {
 //                        sum += num;
