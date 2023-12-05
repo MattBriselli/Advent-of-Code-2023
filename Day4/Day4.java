@@ -25,10 +25,8 @@ public class Day4 {
         int ticker = 0;
 
         while (line != null) {
-            // do stuff
             int winCount = 0;
 
-            System.out.println(line);
             String numbers = line.split(":")[1].trim();
             String[] numbersSet = numbers.split(" | ");
 
@@ -48,25 +46,20 @@ public class Day4 {
                         winnerSet.add(Integer.parseInt(n));
                     } else {
                         if (winnerSet.contains(Integer.parseInt(n))) {
-                            System.out.println("winner!! " + n);
                             winCount++;
                         }
                     }
                 }
             }
-//            wonCards.put(ticker, winCount);
             for (int z = 1; z <= winCount; z++) {
                 int j = 0;
                 int currentMagnifier = wonCards.getOrDefault(ticker, 1);
                 while (j < currentMagnifier) {
-                    System.out.println("I am putting " + (currentMagnifier) + " on " + (z + ticker));
                     int init = wonCards.getOrDefault(z + ticker, 1);
                     wonCards.put(z + ticker, init + 1);
                     j++;
                 }
             }
-//            System.out.println("multiplier: " + roundMulitplier.getOrDefault(ticker, -1));
-//            sum += winCount * roundMulitplier.getOrDefault(ticker, 1);
             winnerSet = new HashSet<>();
 
             sum += wonCards.getOrDefault(ticker, 1);
@@ -74,11 +67,6 @@ public class Day4 {
             ticker++;
             line = reader.readLine();
         }
-
-        for (int i = 0; i < ticker; i++) {
-            System.out.println(wonCards.get(i));
-        }
-
         return sum;
     }
 }
