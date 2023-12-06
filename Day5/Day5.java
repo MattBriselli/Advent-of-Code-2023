@@ -9,30 +9,30 @@ import java.util.*;
 public class Day5 {
 
     private static class Triple {
-        private final int rangeStart;
-        private final int rangeEnd;
-        private final int sumMe;
+        private final BigInteger rangeStart;
+        private final BigInteger rangeEnd;
+        private final BigInteger sumMe;
 
-        Triple(int rangeStart, int rangeEnd, int sumMe) {
+        Triple(BigInteger rangeStart, BigInteger rangeEnd, BigInteger sumMe) {
             this.rangeStart = rangeStart;
             this.rangeEnd = rangeEnd;
             this.sumMe = sumMe;
         }
 
-        public int getRangeStart() {
+        public BigInteger getRangeStart() {
             return rangeStart;
         }
 
-        public int getRangeEnd() {
+        public BigInteger getRangeEnd() {
             return rangeEnd;
         }
 
-        public int getSumMe() {
+        public BigInteger getSumMe() {
             return sumMe;
         }
     }
 
-    private static final Set<Integer> seedSet = new HashSet<>();
+    private static final Set<BigInteger> seedSet = new HashSet<>();
 
     public static void main(String[] args) throws IOException {
 //        BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day5/List"));
@@ -59,7 +59,7 @@ public class Day5 {
                 String seedString = line.split(": ")[1];
                 String[] seedList = seedString.split(" ");
                 for (String seed : seedList) {
-                    seedSet.add(Integer.parseInt(seed));
+                    seedSet.add(BigInteger.valueOf(Integer.parseInt(seed)));
                 }
             } else if (line.contains("-to-")) {
                 currentFrom = line.split("-to")[0];
@@ -76,21 +76,21 @@ public class Day5 {
             } else {
                 // processessing numbers!!!
                 String[] numbers = line.split(" ");
-                int firstNum = -1;
-                int secondNum = -1;
-                int range = -1;
+                BigInteger firstNum = BigInteger.valueOf(-1);
+                BigInteger secondNum = BigInteger.valueOf(-1);
+                BigInteger range = BigInteger.valueOf(-1);
 
                 for (int i = 0; i < numbers.length; i++) {
                     int num = Integer.parseInt(numbers[i]);
                     if (i == 0) {
-                        firstNum = num;
+                        firstNum = BigInteger.valueOf(num);
                     } else if (i == 1) {
-                        secondNum = num;
+                        secondNum = BigInteger.valueOf(num);
                     } else {
-                        range = num;
+                        range = BigInteger.valueOf(num);
                     }
                 }
-                Triple newTrip = new Triple(secondNum, secondNum + range - 1, firstNum - secondNum);
+                Triple newTrip = new Triple(secondNum, secondNum.add(range).subtract(BigInteger.ONE), firstNum.subtract(secondNum));
                 seedTomap.get(currentFrom).get(currentTo).add(newTrip);
             }
             line = reader.readLine();
@@ -99,18 +99,18 @@ public class Day5 {
         return seedTomap;
     }
 
-    private static int getMinSeedLocation(Map<String, Map<String, List<Triple>>> map) {
-        int minSeedLocation = -1;
+    private static BigInteger getMinSeedLocation(Map<String, Map<String, List<Triple>>> map) {
+        BigInteger minSeedLocation = BigInteger.valueOf(-1);
 
-        List<Integer> seedList = seedSet.stream().toList();
-        for (int seed : seedList) {
+        List<BigInteger> seedList = seedSet.stream().toList();
+        for (BigInteger seed : seedList) {
             Map<String, List<Triple>> seedMap = map.get("seed");
             System.out.println("Seed "+  seed);
             for (String key : seedMap.keySet().stream().toList()) {
-                int seedLocation = getSeedLocation(seed, "seed", key, map);
+                BigInteger seedLocation = getSeedLocation(seed, "seed", key, map);
 
                 System.out.println("Seed "+  seed +" location is: " + seedLocation);
-                if (minSeedLocation == -1 || seedLocation < minSeedLocation) {
+                if (minSeedLocation.equals(BigInteger.valueOf(-1)) || seedLocation.compareTo(minSeedLocation) <= 0) {
                     minSeedLocation = seedLocation;
                 }
             }
@@ -120,8 +120,8 @@ public class Day5 {
 
     }
 
-    private static int getSeedLocation(int index, String from, String to, Map<String, Map<String, List<Triple>>> map) {
-        int seedLoc = processTriples(index, map.get(from).get(to));
+    private static BigInteger getSeedLocation(BigInteger index, String from, String to, Map<String, Map<String, List<Triple>>> map) {
+        BigInteger seedLoc = processTriples(index, map.get(from).get(to));
 //        System.out.println("From: " + from + " To: " + to + " is " + seedLoc);
 
         if (to.equals("location")) {
@@ -132,14 +132,14 @@ public class Day5 {
                 return getSeedLocation(seedLoc, to, key, map);
             }
         }
-        return -1;
+        return BigInteger.valueOf(-1);
     }
 
-    private static int processTriples(int index, List<Triple> list) {
+    private static BigInteger processTriples(BigInteger index, List<Triple> list) {
         for (Triple triple : list) {
-            if (index <= triple.getRangeEnd() && index >= triple.getRangeStart()) {
+            if (index.intValue() <= triple.getRangeEnd().intValue() && index.intValue() >= triple.getRangeStart().intValue()) {
 //                System.out.println("that's a bingo!!");
-                return index + triple.getSumMe();
+                return index.add(triple.getSumMe());
             }
         }
         return index;
