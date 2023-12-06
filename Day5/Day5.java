@@ -51,10 +51,11 @@ public class Day5 {
     }
 
     private static final Set<SeedTriple> seedSet = new HashSet<>();
+    private static final Map<String, Map<BigInteger, BigInteger>> routeMapper = new HashMap<>();
 
     public static void main(String[] args) throws IOException {
-//        BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day5/List"));
-        BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day5/Test"));
+        BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day5/List"));
+//        BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day5/Test"));
 
         Map<String, Map<String, List<Triple>>> map = iterate(reader);
 
@@ -153,14 +154,22 @@ public class Day5 {
 
     private static BigInteger getSeedLocation(BigInteger index, String from, String to, Map<String, Map<String, List<Triple>>> map) {
         BigInteger seedLoc = processTriples(index, map.get(from).get(to));
-//        System.out.println("From: " + from + " To: " + to + " is " + seedLoc);
 
         if (to.equals("location")) {
             return seedLoc;
         } else {
             List<String> keyList = map.get(to).keySet().stream().toList();
             for (String key : keyList) {
-                return getSeedLocation(seedLoc, to, key, map);
+                if (!routeMapper.containsKey(key) || !routeMapper.get(key).containsKey(seedLoc)) {
+                    if (!routeMapper.containsKey(key)) {
+                        routeMapper.put(key, new HashMap<>());
+                    }
+                    BigInteger recurse = getSeedLocation(seedLoc, to, key, map);
+                    // Never doing this route again.
+                    routeMapper.get(key).put(seedLoc, recurse);
+                    return recurse;
+                }
+
             }
         }
         return BigInteger.valueOf(-1);
@@ -169,7 +178,6 @@ public class Day5 {
     private static BigInteger processTriples(BigInteger index, List<Triple> list) {
         for (Triple triple : list) {
             if (index.intValue() <= triple.getRangeEnd().intValue() && index.intValue() >= triple.getRangeStart().intValue()) {
-//                System.out.println("that's a bingo!!");
                 return index.add(triple.getSumMe());
             }
         }
