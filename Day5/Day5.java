@@ -8,11 +8,11 @@ import java.util.*;
 
 public class Day5 {
 
-    private record SeedTriple(BigInteger rangeStart, BigInteger rangeEnd) { }
+//    private record SeedTriple(BigInteger rangeStart, BigInteger rangeEnd) { }
 
     private record Triple(BigInteger rangeStart, BigInteger rangeEnd, BigInteger sumMe) { }
 
-    private static final Set<SeedTriple> seedSet = new HashSet<>();
+    private static final Set<Triple> seedSet = new HashSet<>();
     private static final Map<String, Map<BigInteger, BigInteger>> routeMapper = new HashMap<>();
 
     public static void main(String[] args) throws IOException {
@@ -40,7 +40,7 @@ public class Day5 {
                 String[] seedList = seedString.split(" ");
                 for (int i = 0; i < seedList.length; i += 2) {
                     BigInteger rangeStart = new BigInteger(seedList[i]);
-                    seedSet.add(new SeedTriple(rangeStart, new BigInteger(seedList[i+1]).add(rangeStart).subtract(BigInteger.ONE)));
+                    seedSet.add(new Triple(rangeStart, new BigInteger(seedList[i+1]).add(rangeStart).subtract(BigInteger.ONE), BigInteger.valueOf(-1)));
                 }
             } else if (line.contains("-to-")) {
                 currentFrom = line.split("-to")[0];
@@ -83,9 +83,9 @@ public class Day5 {
     private static BigInteger getMinSeedLocation(Map<String, Map<String, List<Triple>>> map) {
         BigInteger minSeedLocation = BigInteger.valueOf(-1);
 
-        List<SeedTriple> seedRangeList = seedSet.stream().toList();
+        List<Triple> seedRangeList = seedSet.stream().toList();
         Set<BigInteger> seeds = new HashSet<>();
-        for (SeedTriple seedTriple : seedRangeList) {
+        for (Triple seedTriple : seedRangeList) {
             BigInteger rangeStart = seedTriple.rangeStart();
             BigInteger rangeEnd = seedTriple.rangeEnd();
             while (rangeStart.compareTo(rangeEnd) < 0) {
@@ -96,7 +96,6 @@ public class Day5 {
 
         for (BigInteger seed : seeds.stream().toList()) {
             Map<String, List<Triple>> seedMap = map.get("seed");
-            System.out.println(seed.intValue());
 
             for (String key : seedMap.keySet().stream().toList()) {
                 BigInteger seedLocation = getSeedLocation(seed, "seed", key, map);
