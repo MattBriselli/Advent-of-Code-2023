@@ -8,59 +8,20 @@ import java.util.*;
 
 public class Day5 {
 
-    private static class SeedTriple {
-        private final BigInteger rangeStart;
-        private final BigInteger rangeEnd;
+    private record SeedTriple(BigInteger rangeStart, BigInteger rangeEnd) { }
 
-        SeedTriple(BigInteger rangeStart, BigInteger rangeEnd) {
-            this.rangeStart = rangeStart;
-            this.rangeEnd = rangeEnd;
-        }
-
-        public BigInteger getRangeStart() {
-            return rangeStart;
-        }
-
-        public BigInteger getRangeEnd() {
-            return rangeEnd;
-        }
-    }
-
-    private static class Triple {
-        private final BigInteger rangeStart;
-        private final BigInteger rangeEnd;
-        private final BigInteger sumMe;
-
-        Triple(BigInteger rangeStart, BigInteger rangeEnd, BigInteger sumMe) {
-            this.rangeStart = rangeStart;
-            this.rangeEnd = rangeEnd;
-            this.sumMe = sumMe;
-        }
-
-        public BigInteger getRangeStart() {
-            return rangeStart;
-        }
-
-        public BigInteger getRangeEnd() {
-            return rangeEnd;
-        }
-
-        public BigInteger getSumMe() {
-            return sumMe;
-        }
-    }
+    private record Triple(BigInteger rangeStart, BigInteger rangeEnd, BigInteger sumMe) { }
 
     private static final Set<SeedTriple> seedSet = new HashSet<>();
     private static final Map<String, Map<BigInteger, BigInteger>> routeMapper = new HashMap<>();
 
     public static void main(String[] args) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day5/List"));
-//        BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day5/Test"));
+//        BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day5/List"));
+        BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day5/Test"));
 
         Map<String, Map<String, List<Triple>>> map = iterate(reader);
 
         System.out.println(getMinSeedLocation(map));
-//        System.out.println(map.get("soil").get("fertilizer").getOrDefault(81, 81));
     }
 
     private static Map<String, Map<String, List<Triple>>> iterate(BufferedReader reader) throws IOException {
@@ -125,10 +86,9 @@ public class Day5 {
         List<SeedTriple> seedRangeList = seedSet.stream().toList();
         Set<BigInteger> seeds = new HashSet<>();
         for (SeedTriple seedTriple : seedRangeList) {
-            BigInteger rangeStart = seedTriple.getRangeStart();
-            BigInteger rangeEnd = seedTriple.getRangeEnd();
+            BigInteger rangeStart = seedTriple.rangeStart();
+            BigInteger rangeEnd = seedTriple.rangeEnd();
             while (rangeStart.compareTo(rangeEnd) < 0) {
-//                System.out.println("Adding a seed");
                 seeds.add(rangeStart);
                 rangeStart = rangeStart.add(BigInteger.ONE);
             }
@@ -177,8 +137,8 @@ public class Day5 {
 
     private static BigInteger processTriples(BigInteger index, List<Triple> list) {
         for (Triple triple : list) {
-            if (index.intValue() <= triple.getRangeEnd().intValue() && index.intValue() >= triple.getRangeStart().intValue()) {
-                return index.add(triple.getSumMe());
+            if (index.intValue() <= triple.rangeEnd().intValue() && index.intValue() >= triple.rangeStart().intValue()) {
+                return index.add(triple.sumMe());
             }
         }
         return index;
