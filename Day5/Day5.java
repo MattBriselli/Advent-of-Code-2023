@@ -8,6 +8,24 @@ import java.util.*;
 
 public class Day5 {
 
+    private static class SeedTriple {
+        private final BigInteger rangeStart;
+        private final BigInteger rangeEnd;
+
+        SeedTriple(BigInteger rangeStart, BigInteger rangeEnd) {
+            this.rangeStart = rangeStart;
+            this.rangeEnd = rangeEnd;
+        }
+
+        public BigInteger getRangeStart() {
+            return rangeStart;
+        }
+
+        public BigInteger getRangeEnd() {
+            return rangeEnd;
+        }
+    }
+
     private static class Triple {
         private final BigInteger rangeStart;
         private final BigInteger rangeEnd;
@@ -32,7 +50,7 @@ public class Day5 {
         }
     }
 
-    private static final Set<BigInteger> seedSet = new HashSet<>();
+    private static final Set<SeedTriple> seedSet = new HashSet<>();
 
     public static void main(String[] args) throws IOException {
 //        BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day5/List"));
@@ -58,8 +76,9 @@ public class Day5 {
             if (line.contains("seeds:")) {
                 String seedString = line.split(": ")[1];
                 String[] seedList = seedString.split(" ");
-                for (String seed : seedList) {
-                    seedSet.add(BigInteger.valueOf(Integer.parseInt(seed)));
+                for (int i = 0; i < seedList.length; i += 2) {
+                    BigInteger rangeStart = new BigInteger(seedList[i]);
+                    seedSet.add(new SeedTriple(rangeStart, new BigInteger(seedList[i+1]).add(rangeStart).subtract(BigInteger.ONE)));
                 }
             } else if (line.contains("-to-")) {
                 currentFrom = line.split("-to")[0];
@@ -81,13 +100,13 @@ public class Day5 {
                 BigInteger range = BigInteger.valueOf(-1);
 
                 for (int i = 0; i < numbers.length; i++) {
-                    int num = Integer.parseInt(numbers[i]);
+                    BigInteger num = new BigInteger(numbers[i]);
                     if (i == 0) {
-                        firstNum = BigInteger.valueOf(num);
+                        firstNum = num;
                     } else if (i == 1) {
-                        secondNum = BigInteger.valueOf(num);
+                        secondNum = num;
                     } else {
-                        range = BigInteger.valueOf(num);
+                        range = num;
                     }
                 }
                 Triple newTrip = new Triple(secondNum, secondNum.add(range).subtract(BigInteger.ONE), firstNum.subtract(secondNum));
@@ -102,10 +121,22 @@ public class Day5 {
     private static BigInteger getMinSeedLocation(Map<String, Map<String, List<Triple>>> map) {
         BigInteger minSeedLocation = BigInteger.valueOf(-1);
 
-        List<BigInteger> seedList = seedSet.stream().toList();
-        for (BigInteger seed : seedList) {
+        List<SeedTriple> seedRangeList = seedSet.stream().toList();
+        Set<BigInteger> seeds = new HashSet<>();
+        for (SeedTriple seedTriple : seedRangeList) {
+            BigInteger rangeStart = seedTriple.getRangeStart();
+            BigInteger rangeEnd = seedTriple.getRangeEnd();
+            while (rangeStart.compareTo(rangeEnd) < 0) {
+//                System.out.println("Adding a seed");
+                seeds.add(rangeStart);
+                rangeStart = rangeStart.add(BigInteger.ONE);
+            }
+        }
+
+        for (BigInteger seed : seeds.stream().toList()) {
             Map<String, List<Triple>> seedMap = map.get("seed");
-            System.out.println("Seed "+  seed);
+            System.out.println(seed.intValue());
+
             for (String key : seedMap.keySet().stream().toList()) {
                 BigInteger seedLocation = getSeedLocation(seed, "seed", key, map);
 
