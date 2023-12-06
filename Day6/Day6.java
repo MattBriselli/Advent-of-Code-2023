@@ -20,7 +20,6 @@ public class Day6 {
         String line = reader.readLine();
         BigInteger time;
         BigInteger distance;
-        BigInteger winners = BigInteger.ZERO;
 
         StringBuilder timeS = new StringBuilder();
         StringBuilder distanceS = new StringBuilder();
@@ -52,13 +51,11 @@ public class Day6 {
                 BigInteger speed = time.subtract(optimalJ);
                 BigInteger turnDistance = speed.multiply(optimalJ);
                 if (turnDistance.compareTo(distance) > 0) {
-                    System.out.println(optimalJ);
+                    System.out.println("optimalJ: " + optimalJ);
                     return time.subtract(optimalJ.multiply(BigInteger.valueOf(2)).subtract(BigInteger.valueOf(1)));
                 }
         }
 
-        System.out.println("winners: " + winners);
-
-        return winners;
+        return -1;
     }
 }
