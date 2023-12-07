@@ -10,6 +10,9 @@ public class Day7 {
     // Part one
     // 128875101 - not right
 
+    // Part two
+    // 252903053 - too high
+
     static class Triple {
 
         private final String key;
@@ -58,7 +61,7 @@ public class Day7 {
         }
     }
 
-    private static final List<String> list = List.of("A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2");
+    private static final List<String> list = List.of("A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2", "J");
 
     public static void main(String[] args) throws IOException {
                 BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day7/List"));
@@ -98,11 +101,11 @@ public class Day7 {
         for (int i = 0; i < list.size(); i++) {
             Triple trip = list.get(i);
 
-            System.out.println("Rank #: " + i + " goes to " + trip.getKey());
-            System.out.println(trip.getBet());
+            System.out.println("Rank #: " + i + " goes to " + trip.getKey() + " betting " + trip.getBet());
             score += trip.getBet() * (list.size() - i);
 
         }
+        System.out.println(list.size());
 
         return score;
     }
@@ -120,8 +123,6 @@ public class Day7 {
             Triple trip = sortedList.get(i);
             int val = trip.getHands().getValue();
             String key = trip.getKey();
-
-            System.out.println(key + " : " + addKey);
 
             if (val < newValue) {
                 sortedList.add(i, addMe);
@@ -146,22 +147,57 @@ public class Day7 {
                 }
             }
         }
+        sortedList.add(sortedList.size(), addMe);
     }
 
     private static Hands getValue(String hand) {
-        Set<String> cardSet = new HashSet<>(Arrays.asList(hand.split("")));
+        int minRank = -1;
+        Map<Integer, Integer> cardMap = new HashMap<>();
+        Set<String> cardSet = new HashSet<>();
+        String[] handSplit = hand.split("");
+        String boostedCard = "";
+        Set<String> boostedCardSet = new HashSet<>();
 
-        if (cardSet.size() == 5) {
+        int jokerCount = 0;
+        for (String s : handSplit) {
+            cardSet.add(s);
+            if (s.equals("J")) {
+                jokerCount++;
+            } else {
+                boostedCardSet.add(s);
+                boostedCard += s;
+                int rank = list.indexOf(s);
+                if (minRank == -1 || minRank > rank) {
+                    minRank = rank;
+                }
+
+                int oldVal = cardMap.getOrDefault(rank, 0);
+                cardMap.put(rank, oldVal + 1);
+            }
+        }
+        // JJJJJ
+        if (minRank == -1) {
+            System.out.println("wowowow" + hand);
+            minRank = Hands.FiveKind.getValue();
+        }
+
+        for (int i = 0; i < jokerCount; i++) {
+            String bestS = list.get(minRank);
+            boostedCardSet.add(bestS);
+            boostedCard += bestS;
+        }
+
+        if (boostedCardSet.size() == 5) {
             return Hands.HighCard;
         }
-        if (cardSet.size() == 1) {
+        if (boostedCardSet.size() == 1) {
             return Hands.FiveKind;
         }
-        if (cardSet.size() == 3) {
+        if (boostedCardSet.size() == 3) {
             // Three kind or Two Pair
             StringBuilder spares = new StringBuilder();
             Set<String> newSet = new HashSet<>();
-            for (String s : hand.split("")) {
+            for (String s : boostedCard.split("")) {
                 if (!newSet.contains(s)) {
                     newSet.add(s);
                 } else {
@@ -173,14 +209,15 @@ public class Day7 {
             }
             return Hands.TwoPair;
         }
-        if (cardSet.size() == 4) {
+        if (boostedCardSet.size() == 4) {
             return Hands.OnePair;
         }
-        if (cardSet.size() == 2) {
+        if (boostedCardSet.size() == 2) {
             // Full House or Four Kind
             String spares = "";
             Set<String> newSet = new HashSet<>();
-            for (String s : hand.split("")) {
+            System.out.println("boosted: " + boostedCard);
+            for (String s : boostedCard.split("")) {
                 if (!newSet.contains(s)) {
                     newSet.add(s);
                 } else {
