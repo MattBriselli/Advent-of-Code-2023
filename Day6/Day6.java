@@ -56,6 +56,6 @@ public class Day6 {
                 }
         }
 
-        return -1;
+        return BigInteger.valueOf(-1);
     }
 }
