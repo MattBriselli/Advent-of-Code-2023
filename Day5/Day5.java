@@ -8,8 +8,6 @@ import java.util.*;
 
 public class Day5 {
 
-//    private record SeedTriple(BigInteger rangeStart, BigInteger rangeEnd) { }
-
     private record Triple(BigInteger rangeStart, BigInteger rangeEnd, BigInteger sumMe) { }
 
     private static final Set<Triple> seedSet = new HashSet<>();
