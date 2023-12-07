@@ -11,7 +11,11 @@ public class Day7 {
     // 128875101 - not right
 
     // Part two
+    // 252708908 - too low
+    // 252773714 - too low
+    // 252839210 - wrong
     // 252903053 - too high
+
 
     static class Triple {
 
@@ -61,10 +65,10 @@ public class Day7 {
         }
     }
 
-    private static final List<String> list = List.of("A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2", "J");
+    private static final List<String> list = List.of("A", "K", "Q", "T", "9", "8", "7", "6", "5", "4", "3", "2", "J");
 
     public static void main(String[] args) throws IOException {
-                BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day7/List"));
+        BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day7/List"));
 //        BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day7/Test"));
 
         System.out.println(iterate(reader));
@@ -100,13 +104,9 @@ public class Day7 {
 
         for (int i = 0; i < list.size(); i++) {
             Triple trip = list.get(i);
-
-            System.out.println("Rank #: " + i + " goes to " + trip.getKey() + " betting " + trip.getBet());
+            System.out.println("Rank #: " + i + " goes to " + trip.getKey() + " betting " + trip.getBet() + " with " + trip.hands);
             score += trip.getBet() * (list.size() - i);
-
         }
-        System.out.println(list.size());
-
         return score;
     }
 
@@ -126,7 +126,7 @@ public class Day7 {
 
             if (val < newValue) {
                 sortedList.add(i, addMe);
-                System.out.println("val : " + val + " less than " + newValue);
+//                System.out.println("val : " + val + " less than " + newValue);
 //                System.out.println("new List : ");
                 return;
             } else if (val == newValue) {
@@ -135,8 +135,8 @@ public class Day7 {
                 for (int j = 0; j < addKey.length(); j++) {
                     String existing = key.split("")[j];
                     String addChar = addKey.split("")[j];
-                    System.out.println("Comparing: " + existing + " and " + addChar);
-                    System.out.println("Comparing: " + list.indexOf(existing) + " and " + list.indexOf(addChar));
+//                    System.out.println("Comparing: " + existing + " and " + addChar);
+//                    System.out.println("Comparing: " + list.indexOf(existing) + " and " + list.indexOf(addChar));
 
                     if (list.indexOf(existing) > list.indexOf(addChar)) {
                         sortedList.add(i, addMe);
@@ -160,10 +160,15 @@ public class Day7 {
 
         int jokerCount = 0;
         for (String s : handSplit) {
-            cardSet.add(s);
             if (s.equals("J")) {
                 jokerCount++;
+                cardSet.add(s);
+            } else if (!cardSet.contains(s)) {
+                cardSet.add(s);
+                boostedCardSet.add(s);
+                boostedCard += s;
             } else {
+                // A repeat!
                 boostedCardSet.add(s);
                 boostedCard += s;
                 int rank = list.indexOf(s);
@@ -176,10 +181,17 @@ public class Day7 {
             }
         }
         // JJJJJ
-        if (minRank == -1) {
+        if (minRank == -1 && hand.equals("JJJJJ")) {
             System.out.println("wowowow" + hand);
-            minRank = Hands.FiveKind.getValue();
+            minRank = list.indexOf("J");
+        } else if (minRank == -1 && hand.contains("J")) {
+            for (int i = 0; i < handSplit.length; i++) {
+                if (minRank == -1 || minRank > list.indexOf(handSplit[i])) {
+                    minRank = list.indexOf(handSplit[i]);
+                }
+            }
         }
+
 
         for (int i = 0; i < jokerCount; i++) {
             String bestS = list.get(minRank);
@@ -224,6 +236,7 @@ public class Day7 {
                     spares += s;
                 }
             }
+            System.out.println(spares);
             if (spares.split("")[0].equals(spares.split("")[1]) && spares.split("")[0].equals(spares.split("")[2])) {
                 return Hands.FourKind;
             }
