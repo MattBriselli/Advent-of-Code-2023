@@ -50,8 +50,8 @@ public class Day8 {
     private static boolean isDone = true;
 
     public static void main(String[] args) throws IOException {
-//        BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day8/List"));
-        BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day8/Test3"));
+        BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day8/List"));
+//        BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day8/Test3"));
 
         System.out.println(iterate(reader));
     }
@@ -124,7 +124,6 @@ public class Day8 {
                 ret.add(nodeMap.get(key));
             }
         }
-        System.out.println("size is: " + ret.size());
         return ret;
     }
 
@@ -136,10 +135,8 @@ public class Day8 {
         for (Node n  : nodeList) {
             char[] name = n.getName().toCharArray();
             if (name[name.length-1] != 'Z') {
-//                System.out.println("FAILLLEEEEEEDD!!!! " + n.getName());
                 return false;
             }
-//            System.out.println("Checked " + n.getName() + " and it was good.");
         }
         return true;
     }
@@ -161,7 +158,6 @@ public class Day8 {
                 ret.add(n.getRight());
             }
         }
-        System.out.println("The size is: "+ ret.size());
         return ret;
     }
 
@@ -170,9 +166,6 @@ public class Day8 {
         int comboSize = combo.length();
 
         int count = 0;
-
-//        System.out.println("Map size: " + nodeMap.size());
-//        System.out.println(nodeMap.containsKey("AAA"));
 
         while (!done(nodeList)) {
             int move = count % comboSize;
