@@ -3,12 +3,12 @@ package main.java.org.adventofcode2023.Day8;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class Day8 {
+
+    // Part Two
+    // 774 - Not right
 
     private static class Node {
         final String name;
@@ -47,10 +47,11 @@ public class Day8 {
     }
 
     private static final Map<String, Node> nodeMap = new HashMap<>();
+    private static boolean isDone = true;
 
     public static void main(String[] args) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day8/List"));
-//        BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day8/Test2"));
+//        BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day8/List"));
+        BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day8/Test3"));
 
         System.out.println(iterate(reader));
     }
@@ -114,24 +115,72 @@ public class Day8 {
         return sum;
     }
 
+    private static Set<Node> getANodes() {
+        Set<Node> ret = new HashSet<>();
+
+        for (String key : nodeMap.keySet()) {
+            char[] keyC = key.toCharArray();
+            if ('A' == keyC[keyC.length - 1]) {
+                ret.add(nodeMap.get(key));
+            }
+        }
+        System.out.println("size is: " + ret.size());
+        return ret;
+    }
+
+    private static boolean done(Set<Node> nodeList) {
+        if (!isDone) {
+            isDone = true;
+            return false;
+        }
+        for (Node n  : nodeList) {
+            char[] name = n.getName().toCharArray();
+            if (name[name.length-1] != 'Z') {
+//                System.out.println("FAILLLEEEEEEDD!!!! " + n.getName());
+                return false;
+            }
+//            System.out.println("Checked " + n.getName() + " and it was good.");
+        }
+        return true;
+    }
+
+    private static Set<Node> processMove(Set<Node> nodeList, boolean moveLeft) {
+        Set<Node> ret = new HashSet<>();
+        for (Node n : nodeList) {
+            if (moveLeft) {
+                char[] nextName = n.getLeft().getName().toCharArray();
+                if (nextName[nextName.length - 1] != 'Z') {
+                    isDone = false;
+                }
+                ret.add(n.getLeft());
+            } else {
+                char[] nextName = n.getRight().getName().toCharArray();
+                if (nextName[nextName.length - 1] != 'Z') {
+                    isDone = false;
+                }
+                ret.add(n.getRight());
+            }
+        }
+        System.out.println("The size is: "+ ret.size());
+        return ret;
+    }
+
     private static int processMoves(String combo) {
-        Node next = nodeMap.get("AAA");
+        Set<Node> nodeList = getANodes();
         int comboSize = combo.length();
 
         int count = 0;
 
-        System.out.println(nodeMap.size());
-        System.out.println(nodeMap.containsKey("AAA"));
+//        System.out.println("Map size: " + nodeMap.size());
+//        System.out.println(nodeMap.containsKey("AAA"));
 
-        while (!next.getName().equals("ZZZ")) {
+        while (!done(nodeList)) {
             int move = count % comboSize;
             String moveString = combo.substring(move, move + 1);
-            System.out.println(moveString);
-            System.out.println(next.getName());
             if (moveString.equals("L")) {
-                next = next.getLeft();
+                nodeList = processMove(nodeList, /*= moveLeft */ true);
             } else {
-                next = next.getRight();
+                nodeList = processMove(nodeList, /*= moveLeft */  false);
             }
             count++;
         }
