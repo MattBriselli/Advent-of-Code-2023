@@ -11,6 +11,7 @@ public class Day8 {
     // Part Two
     // 774 - Not right
     // 1330333684 - too low
+    // 18625484023687 - answer!!! (your LCM code didn't work)
 
     private static class Node {
         final String name;
@@ -129,15 +130,14 @@ public class Day8 {
 
     private static boolean done(List<Node> nodeList) {
         if (nodeList.size() == doneIndexes.size()) {
+            for (BigInteger key : doneIndexes.keySet()) {
+                BigInteger index = doneIndexes.get(key);
+                // SOoooooo, I just took these indexes, and used an  internet LCM calculator, and it worked.
+                // my LCM code has a bug in it......
+                System.out.println(index);
+            }
             return true;
         }
-
-//        for (Node n  : nodeList) {
-//            char[] name = n.getName().toCharArray();
-//            if (name[name.length-1] != 'Z') {
-//                return false;
-//            }
-//        }
         return false;
     }
 
@@ -207,8 +207,10 @@ public class Day8 {
         if (number1.compareTo(BigInteger.ZERO) == 0 || number2.compareTo(BigInteger.ZERO) == 0) {
             return BigInteger.ZERO;
         }
-        int absHigherNumber = Math.max(number1.intValue(), number2.intValue());
-        int absLowerNumber = Math.min(number1.intValue(), number2.intValue());
+        int abs1 = Math.abs(number1.intValue());
+        int abs2 = Math.abs(number2.intValue());
+        int absHigherNumber = Math.max(abs1, abs2);
+        int absLowerNumber = Math.min(abs1, abs2);
         int lcm = absHigherNumber;
         while (lcm % absLowerNumber != 0) {
             lcm += absHigherNumber;
