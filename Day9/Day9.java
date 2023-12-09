@@ -14,6 +14,9 @@ public class Day9 {
     // Part One
     // 1581676777 - Not the right answer
 
+    // Part Two
+    // -19063 - Not the right answer
+
     public static void main(String[] args) throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day9/List"));
 //        BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day9/Test"));
@@ -48,7 +51,7 @@ public class Day9 {
             }
             // For the final all 0 layer
             depth = depth.add(BigInteger.ONE);
-            sum = sum.add(getFinalDigit(depthMaps, depth));
+            sum = sum.add(getFirstDigit(depthMaps, depth));
             differenceList = new ArrayList<>();
 
             line = reader.readLine();
@@ -56,7 +59,7 @@ public class Day9 {
         return sum;
     }
 
-    private static BigInteger getFinalDigit(Map<BigInteger, List<BigInteger>> map, BigInteger totalDepth) {
+    private static BigInteger getFirstDigit(Map<BigInteger, List<BigInteger>> map, BigInteger totalDepth) {
         List<BigInteger> newNumbers = new ArrayList<>();
 
         for (BigInteger i = totalDepth; i.compareTo(BigInteger.ZERO) > 0; i = i.subtract(BigInteger.ONE)) {
@@ -67,15 +70,12 @@ public class Day9 {
                 // Prev add
                 BigInteger prevAdd = newNumbers.get(totalDepth.subtract(i).subtract(BigInteger.ONE).intValue());
                 List<BigInteger> rowList = map.get(i.subtract(BigInteger.ONE));
-                for (BigInteger b : rowList) {
-                    System.out.println("row: " + b);
-                }
-                BigInteger finalDigit = rowList.get(rowList.size() - 1);
-                System.out.println("final digit is: " + finalDigit + " and we previously added: " + prevAdd);
-                newNumbers.add(finalDigit.add(prevAdd));
+                BigInteger firstDigit = rowList.get(0);
+                System.out.println("first digit is: " + firstDigit + " and we previously added: " + prevAdd);
+                newNumbers.add(firstDigit.subtract(prevAdd));
             }
         }
-        System.out.println(newNumbers.get(totalDepth.intValue() - 1));
+        System.out.println("first digit: " + newNumbers.get(totalDepth.intValue() - 1));
         return newNumbers.get(totalDepth.intValue() - 1);
     }
 
