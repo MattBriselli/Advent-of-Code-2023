@@ -11,11 +11,14 @@ import java.util.Map;
 
 public class Day9 {
 
-    public static void main(String[] args) throws IOException {
-//        BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day9/List"));
-        BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day9/Test"));
+    // Part One
+    // 1581676777 - Not the right answer
 
-        System.out.println(iterate(reader));
+    public static void main(String[] args) throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day9/List"));
+//        BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day9/Test"));
+
+        System.out.println("we're guessing: " + iterate(reader));
     }
 
     private static BigInteger iterate(BufferedReader reader) throws IOException {
@@ -86,11 +89,11 @@ public class Day9 {
     }
 
     private static List<BigInteger> generateDiffList(List<BigInteger> list) {
-        BigInteger prev = BigInteger.valueOf(-1);
+        BigInteger prev = BigInteger.valueOf(-1000);
         List<BigInteger> ret = new ArrayList<>();
 
         for (BigInteger next : list) {
-            if (prev.compareTo(BigInteger.valueOf(-1)) != 0) {
+            if (prev.compareTo(BigInteger.valueOf(-1000)) != 0) {
                 // Not equal to -1
                 System.out.println("next is: " + next +  ", adding: " + next.subtract(prev));
                 ret.add(next.subtract(prev));
