@@ -22,12 +22,6 @@ public class Day8 {
             this.name = name;
         }
 
-        Node(String name, Node left, Node right) {
-            this.name = name;
-            this.left = left;
-            this.right = right;
-        }
-
         public void setLeft(Node left) {
             this.left = left;
         }
