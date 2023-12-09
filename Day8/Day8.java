@@ -127,7 +127,7 @@ public class Day8 {
         return ret;
     }
 
-    private static boolean done(Set<Node> nodeList) {
+    private static boolean done(List<Node> nodeList) {
         if (!isDone) {
             isDone = true;
             return false;
@@ -141,8 +141,8 @@ public class Day8 {
         return true;
     }
 
-    private static Set<Node> processMove(Set<Node> nodeList, boolean moveLeft) {
-        Set<Node> ret = new HashSet<>();
+    private static List<Node> processMove(List<Node> nodeList, boolean moveLeft) {
+        List<Node> ret = new ArrayList<>();
         for (Node n : nodeList) {
             if (moveLeft) {
                 char[] nextName = n.getLeft().getName().toCharArray();
@@ -162,21 +162,20 @@ public class Day8 {
     }
 
     private static int processMoves(String combo) {
-        Set<Node> nodeSet = getANodes();
         List<Node> nodeList = getANodes().stream().toList();
         int comboSize = combo.length();
 
         int count = 0;
 
-        while (!done(nodeSet)) {
+        while (!done(nodeList)) {
             int move = count % comboSize;
             String moveString = combo.substring(move, move + 1);
             if (moveString.equals("L")) {
-                nodeSet = processMove(nodeSet, /*= moveLeft */ true);
+                nodeList = processMove(nodeList, /*= moveLeft */ true);
             } else {
-                nodeSet = processMove(nodeSet, /*= moveLeft */  false);
+                nodeList = processMove(nodeList, /*= moveLeft */  false);
             }
-            System.out.println(nodeSet.stream().toList().get(0).getName());
+            System.out.println(nodeList.get(0).getName());
             count++;
         }
         return count;
