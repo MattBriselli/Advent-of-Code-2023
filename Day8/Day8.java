@@ -50,7 +50,7 @@ public class Day8 {
     }
 
     private static final Map<String, Node> nodeMap = new HashMap<>();
-    private static Map<BigInteger, BigInteger> doneIndexes = new HashMap<>();
+    private static final Map<BigInteger, BigInteger> doneIndexes = new HashMap<>();
 
     public static void main(String[] args) throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day8/List"));
@@ -68,7 +68,6 @@ public class Day8 {
         while (line != null) {
             // do stuff
             System.out.println(line);
-            Set<Character> lineSet = new HashSet<>();
 
             if (firstLine) {
                 combo = line.trim();
@@ -77,13 +76,11 @@ public class Day8 {
                 String name = line.split(" = ")[0].trim();
                 String first = line.split(", ")[0].split("\\(")[1].trim();
                 String second = line.split(", ")[1].split("\\)")[0].trim();
-                System.out.println(name + " : " + first + " : " + second);
 
                 Node current = nodeMap.getOrDefault(name, null);
                 Node left = nodeMap.getOrDefault(first, null);
                 Node right = nodeMap.getOrDefault(second, null);
 
-                System.out.println(name);
                 if (left == null) {
                     left = new Node(first);
                     nodeMap.put(first, left);
@@ -104,9 +101,6 @@ public class Day8 {
                 current.setLeft(left);
                 current.setRight(right);
                 nodeMap.put(name, current);
-                if (name.equals("AAA")) {
-                    System.out.println(current.getLeft().name);
-                }
             }
             line = reader.readLine();
         }
@@ -143,28 +137,18 @@ public class Day8 {
 
     private static List<Node> processMove(List<Node> nodeList, BigInteger count, boolean moveLeft) {
         List<Node> ret = new ArrayList<>();
-        System.out.println("the count is: " + count);
 
         for (BigInteger i = BigInteger.ZERO; i.compareTo(BigInteger.valueOf(nodeList.size())) < 0; i = i.add(BigInteger.ONE)) {
             Node n = nodeList.get(i.intValue());
             if (moveLeft) {
                 char[] nextName = n.getLeft().getName().toCharArray();
                 if (nextName[nextName.length - 1] == 'Z') {
-                    if (doneIndexes.size() >= count.intValue() && doneIndexes.get(count) != null && doneIndexes.get(count).intValue() >= 0) {
-                        System.out.println("we got a duplicate? " + doneIndexes.get(count) + " : " + count);
-                    }
-                    System.out.println("Z!! " + "put " + count + " into " + i);
                     doneIndexes.put(i, count);
                 }
                 ret.add(n.getLeft());
             } else {
                 char[] nextName = n.getRight().getName().toCharArray();
                 if (nextName[nextName.length - 1] == 'Z') {
-                    System.out.println("Z!!");
-                    if (doneIndexes.size() >= count.intValue() && doneIndexes.get(count) != null && doneIndexes.get(count).intValue() >= 0) {
-                        System.out.println("we got a duplicate? " + doneIndexes.get(count) + " : " + count);
-                    }
-                    System.out.println("Z!! " + "put " + count + " into " + i);
                     doneIndexes.put(i, count);
                 }
                 ret.add(n.getRight());
@@ -189,7 +173,6 @@ public class Day8 {
             } else {
                 nodeList = processMove(nodeList, count, /*= moveLeft */  false);
             }
-            System.out.println(nodeList.get(0).getName());
         }
         return processLCM();
     }
