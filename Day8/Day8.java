@@ -3,12 +3,14 @@ package main.java.org.adventofcode2023.Day8;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.*;
 
 public class Day8 {
 
     // Part Two
     // 774 - Not right
+    // 1330333684 - too low
 
     private static class Node {
         final String name;
@@ -47,18 +49,18 @@ public class Day8 {
     }
 
     private static final Map<String, Node> nodeMap = new HashMap<>();
-    private static boolean isDone = true;
+    private static Map<BigInteger, BigInteger> doneIndexes = new HashMap<>();
 
     public static void main(String[] args) throws IOException {
-//        BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day8/List"));
-        BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day8/Test3"));
+        BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day8/List"));
+//        BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day8/Test3"));
 
         System.out.println("we're guessing: " + iterate(reader));
     }
 
-    private static int iterate(BufferedReader reader) throws IOException {
+    private static BigInteger iterate(BufferedReader reader) throws IOException {
         String line = reader.readLine();
-        int sum = 0;
+        BigInteger sum = BigInteger.ZERO;
         String combo = "";
         boolean firstLine = true;
 
@@ -82,13 +84,11 @@ public class Day8 {
 
                 System.out.println(name);
                 if (left == null) {
-                    System.out.println("left was null");
                     left = new Node(first);
                     nodeMap.put(first, left);
                 }
 
                 if (right == null && !first.equals(second)) {
-                    System.out.println("right was null");
                     right = new Node(second);
                     nodeMap.put(second, right);
                 } else if (right == null) {
@@ -110,13 +110,13 @@ public class Day8 {
             line = reader.readLine();
         }
 
-        sum = processMoves(combo);
+        sum = sum.add(processMoves(combo));
 
         return sum;
     }
 
-    private static Set<Node> getANodes() {
-        Set<Node> ret = new HashSet<>();
+    private static List<Node> getANodes() {
+        List<Node> ret = new ArrayList<>();
 
         for (String key : nodeMap.keySet()) {
             char[] keyC = key.toCharArray();
@@ -128,32 +128,44 @@ public class Day8 {
     }
 
     private static boolean done(List<Node> nodeList) {
-        if (!isDone) {
-            isDone = true;
-            return false;
+        if (nodeList.size() == doneIndexes.size()) {
+            return true;
         }
-        for (Node n  : nodeList) {
-            char[] name = n.getName().toCharArray();
-            if (name[name.length-1] != 'Z') {
-                return false;
-            }
-        }
-        return true;
+
+//        for (Node n  : nodeList) {
+//            char[] name = n.getName().toCharArray();
+//            if (name[name.length-1] != 'Z') {
+//                return false;
+//            }
+//        }
+        return false;
     }
 
-    private static List<Node> processMove(List<Node> nodeList, boolean moveLeft) {
+    private static List<Node> processMove(List<Node> nodeList, BigInteger count, boolean moveLeft) {
         List<Node> ret = new ArrayList<>();
-        for (Node n : nodeList) {
+        System.out.println("the count is: " + count);
+
+        for (BigInteger i = BigInteger.ZERO; i.compareTo(BigInteger.valueOf(nodeList.size())) < 0; i = i.add(BigInteger.ONE)) {
+            Node n = nodeList.get(i.intValue());
             if (moveLeft) {
                 char[] nextName = n.getLeft().getName().toCharArray();
-                if (nextName[nextName.length - 1] != 'Z') {
-                    isDone = false;
+                if (nextName[nextName.length - 1] == 'Z') {
+                    if (doneIndexes.size() >= count.intValue() && doneIndexes.get(count) != null && doneIndexes.get(count).intValue() >= 0) {
+                        System.out.println("we got a duplicate? " + doneIndexes.get(count) + " : " + count);
+                    }
+                    System.out.println("Z!! " + "put " + count + " into " + i);
+                    doneIndexes.put(i, count);
                 }
                 ret.add(n.getLeft());
             } else {
                 char[] nextName = n.getRight().getName().toCharArray();
-                if (nextName[nextName.length - 1] != 'Z') {
-                    isDone = false;
+                if (nextName[nextName.length - 1] == 'Z') {
+                    System.out.println("Z!!");
+                    if (doneIndexes.size() >= count.intValue() && doneIndexes.get(count) != null && doneIndexes.get(count).intValue() >= 0) {
+                        System.out.println("we got a duplicate? " + doneIndexes.get(count) + " : " + count);
+                    }
+                    System.out.println("Z!! " + "put " + count + " into " + i);
+                    doneIndexes.put(i, count);
                 }
                 ret.add(n.getRight());
             }
@@ -161,23 +173,47 @@ public class Day8 {
         return ret;
     }
 
-    private static int processMoves(String combo) {
-        List<Node> nodeList = getANodes().stream().toList();
+    private static BigInteger processMoves(String combo) {
+        List<Node> nodeList = getANodes();
         int comboSize = combo.length();
 
-        int count = 0;
+        BigInteger count = BigInteger.ZERO;
 
         while (!done(nodeList)) {
-            int move = count % comboSize;
+            int move = count.intValue() % comboSize;
             String moveString = combo.substring(move, move + 1);
+
+            count = count.add(BigInteger.ONE);
             if (moveString.equals("L")) {
-                nodeList = processMove(nodeList, /*= moveLeft */ true);
+                nodeList = processMove(nodeList, count, /*= moveLeft */ true);
             } else {
-                nodeList = processMove(nodeList, /*= moveLeft */  false);
+                nodeList = processMove(nodeList, count, /*= moveLeft */  false);
             }
             System.out.println(nodeList.get(0).getName());
-            count++;
         }
-        return count;
+        return processLCM();
     }
+
+    private static BigInteger processLCM() {
+        BigInteger ret = BigInteger.ONE;
+
+        for (BigInteger b : doneIndexes.keySet()) {
+            ret = lcm(doneIndexes.get(b), ret);
+        }
+        return ret;
+    }
+
+    private static BigInteger lcm(BigInteger number1, BigInteger number2) {
+        if (number1.compareTo(BigInteger.ZERO) == 0 || number2.compareTo(BigInteger.ZERO) == 0) {
+            return BigInteger.ZERO;
+        }
+        int absHigherNumber = Math.max(number1.intValue(), number2.intValue());
+        int absLowerNumber = Math.min(number1.intValue(), number2.intValue());
+        int lcm = absHigherNumber;
+        while (lcm % absLowerNumber != 0) {
+            lcm += absHigherNumber;
+        }
+        return BigInteger.valueOf(lcm);
+    }
+
 }
