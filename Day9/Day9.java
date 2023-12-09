@@ -39,7 +39,6 @@ public class Day9 {
 
             for (String s: lineSplit) {
                 if (!s.isBlank()) {
-                    System.out.println(s);
                     differenceList.add(new BigInteger(s));
                 }
             }
@@ -71,11 +70,9 @@ public class Day9 {
                 BigInteger prevAdd = newNumbers.get(totalDepth.subtract(i).subtract(BigInteger.ONE).intValue());
                 List<BigInteger> rowList = map.get(i.subtract(BigInteger.ONE));
                 BigInteger firstDigit = rowList.get(0);
-                System.out.println("first digit is: " + firstDigit + " and we previously added: " + prevAdd);
                 newNumbers.add(firstDigit.subtract(prevAdd));
             }
         }
-        System.out.println("first digit: " + newNumbers.get(totalDepth.intValue() - 1));
         return newNumbers.get(totalDepth.intValue() - 1);
     }
 
@@ -94,8 +91,6 @@ public class Day9 {
 
         for (BigInteger next : list) {
             if (prev.compareTo(BigInteger.valueOf(-1000)) != 0) {
-                // Not equal to -1
-                System.out.println("next is: " + next +  ", adding: " + next.subtract(prev));
                 ret.add(next.subtract(prev));
             }
             prev = next;
