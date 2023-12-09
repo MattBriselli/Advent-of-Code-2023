@@ -162,19 +162,21 @@ public class Day8 {
     }
 
     private static int processMoves(String combo) {
-        Set<Node> nodeList = getANodes();
+        Set<Node> nodeSet = getANodes();
+        List<Node> nodeList = getANodes().stream().toList();
         int comboSize = combo.length();
 
         int count = 0;
 
-        while (!done(nodeList)) {
+        while (!done(nodeSet)) {
             int move = count % comboSize;
             String moveString = combo.substring(move, move + 1);
             if (moveString.equals("L")) {
-                nodeList = processMove(nodeList, /*= moveLeft */ true);
+                nodeSet = processMove(nodeSet, /*= moveLeft */ true);
             } else {
-                nodeList = processMove(nodeList, /*= moveLeft */  false);
+                nodeSet = processMove(nodeSet, /*= moveLeft */  false);
             }
+            System.out.println(nodeSet.stream().toList().get(0).getName());
             count++;
         }
         return count;
