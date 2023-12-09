@@ -10,7 +10,7 @@ public class DayX {
 //        BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/DayX/List"));
         BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/DayX/Test"));
 
-        System.out.println("we're guessing:" + iterate(reader));
+        System.out.println("we're guessing: " + iterate(reader));
     }
 
     private static int iterate(BufferedReader reader) throws IOException {
