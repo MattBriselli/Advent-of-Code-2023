@@ -18,165 +18,349 @@ public class Day10 {
     private static final List<List<String>> board = new ArrayList<>();
 
     public static void main(String[] args) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day10/List"));
-//        BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day10/Test2"));
+//        BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day10/List"));
+        BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day10/Test3"));
 
         System.out.println("we're guessing: " + iterate(reader));
     }
 
     private static int iterate(BufferedReader reader) throws IOException {
         String line = reader.readLine();
-        int sum = 0;
 
         int ticker = 0;
+        int startX = -1;
+        int startY = -1;
+
         while (line != null) {
             System.out.println(line);
+            if (line.contains("S")) {
+                startY = ticker;
+                startX = line.indexOf("S");
+            }
             board.add(ticker, new ArrayList<>(Arrays.asList(line.split(""))));
 
             ticker++;
             line = reader.readLine();
         }
 
-        // Finding the starting index
-        for (int i = 0; i < board.size(); i++) {
-            for (int j = 0; j < board.get(i).size(); j++) {
-                String s = board.get(i).get(j);
-                if (s.equals("S")) {
-                    // We're going to start going down, assuming we've found the top left corner of the maze (progressing left -> right, top -> down).
-                    if (board.size() == i + 1) {
-                        System.out.println("Can't go down :(");
-                        break;
-                    }
-                    System.out.println("found an F at y:" + i + " x:" + j);
-                    int loopSize = getLoopSize(board.get(i + 1).get(j), Direction.Up, i + 1, j, 0);
-                    if (loopSize != -1) {
-                        return loopSize;
-                    }
-                }
-            }
-        }
-        System.out.println("we're out");
-        return sum;
+        System.out.println("found the 'S' F at y:" + startY + " x:" + startX);
+        return getLoopSize(Direction.Up, Direction.Left,startY + 1, startX, startY, startX + 1, 0);
     }
 
-    private static int getLoopSize(String s, Direction entryDirection, int y, int x, int count) {
-//        System.out.println("StartingX is " + startingX + " and X is " + x + ". StartingY is " + startingY + " and Y is " + y);
-        if (s.equals("S")) {
-            // We did it!!! Break from the loop
-            System.out.println("total path length is: " + count);
-            return (count + 1) / 2;
-        }
-        count++;
-
-        System.out.println("The count is: " + count + " we've got a " + s + " and we came from " + entryDirection.toString());
-        // Make sure that the current "new" position, is a continuation from the previous one
-        switch (entryDirection) {
+    private static boolean validMove(Direction direction, String s) {
+        switch (direction) {
             case Down:
                 if (!s.equals("F") && !s.equals("7") && !s.equals("|")) {
-                    return -1;
+                    return false;
                 }
-                switch (s) {
-                    case "F":
-                        if (board.get(y).size() == x + 1) {
-                            // Can't move right
-                            return -1;
-                        }
-                        return getLoopSize(board.get(y).get(x+1), Direction.Left, y, x+1, count);
-                    case "7":
-                        if (x - 1 < 0) {
-                            // Can't move left
-                            return -1;
-                        }
-                        return getLoopSize(board.get(y).get(x-1), Direction.Right, y, x-1, count);
-                    case "|":
-                        if (y-1 < 0) {
-                            // Can't move up
-                            return -1;
-                        }
-                        return getLoopSize(board.get(y-1).get(x), Direction.Down, y-1, x, count);
-                    default:
-                        return -1;
-                }
+                return true;
             case Up:
                 if (!s.equals("L") && !s.equals("J") && !s.equals("|")) {
                     System.out.println("Wrong char going: Down - " + s);
-                    return -1;
+                    return false;
                 }
-                switch (s) {
-                    case "L":
-                        if (board.get(y).size() == x + 1) {
-                            // Can't move right
-                            return -1;
-                        }
-                        return getLoopSize(board.get(y).get(x+1), Direction.Left, y, x+1, count);
-                    case "J":
-                        if (x - 1 < 0) {
-                            // Can't move left
-                            return -1;
-                        }
-                        return getLoopSize(board.get(y).get(x-1), Direction.Right, y, x-1, count);
-                    case "|":
-                        if (y + 1 == board.size()) {
-                            // Can't move down
-                            return -1;
-                        }
-                        return getLoopSize(board.get(y+1).get(x), Direction.Up, y+1, x, count);
-                    default:
-                        return -1;
-                }
+                return true;
             case Right:
                 if (!s.equals("L") && !s.equals("F") && !s.equals("-")) {
-                    return -1;
+                    return false;
                 }
-                switch (s) {
-                    case "L":
-                        if (y-1 < 0) {
-                            // Can't move up
-                            return -1;
-                        }
-                        return getLoopSize(board.get(y-1).get(x), Direction.Down, y-1, x, count);
-                    case "F":
-                        if (y + 1 == board.size()) {
-                            // Can't move down
-                            return -1;
-                        }
-                        return getLoopSize(board.get(y+1).get(x), Direction.Up, y+1, x, count);
-                    case "-":
-                        if (x - 1 < 0) {
-                            // Can't move left
-                            return -1;
-                        }
-                        return getLoopSize(board.get(y).get(x-1), Direction.Right, y, x-1, count);
-                    default:
-                        return -1;
-                }
+                return true;
             case Left:
                 if (!s.equals("J") && !s.equals("7") && !s.equals("-")) {
+                    return false;
+                }
+                return true;
+        }
+        return false;
+    }
+
+    private static int getLoopSize(Direction headEntry, Direction tailEntry, int headY, int headX, int tailY, int tailX, int count) {
+        count++;
+        
+        if (headY == tailY && headX == tailX) {
+            // We did it!!! Break from the loop
+            return count;
+        }
+
+        String headS = board.get(headY).get(headX);
+        String tailS = board.get(tailY).get(tailX);
+
+        System.out.println("The count is: " + count + " we've got a " + tailS + " Tail and we came from " + tailEntry.toString());
+        switch (tailEntry) {
+            case Down:
+                if (!validMove(Direction.Down, tailS)) {
+                    System.out.println("Wrong Tail char going Tail: Down - " + tailS);
                     return -1;
                 }
-                switch (s) {
-                    case "J":
-                        if (y-1 < 0) {
-                            // Can't move up
-                            return -1;
-                        }
-                        return getLoopSize(board.get(y-1).get(x), Direction.Down, y-1, x, count);
-                    case "7":
-                        if (y + 1 == board.size()) {
-                            // Can't move down
-                            return -1;
-                        }
-                        return getLoopSize(board.get(y+1).get(x), Direction.Up, y+1, x, count);
-                    case "-":
-                        if (board.get(y).size() == x + 1) {
+                switch (tailS) {
+                    case "F":
+                        if (board.get(tailY).size() == tailX + 1) {
                             // Can't move right
                             return -1;
                         }
-                        return getLoopSize(board.get(y).get(x+1), Direction.Left, y, x+1, count);
+                        tailX++;
+                        tailEntry = Direction.Left;
+                        break;
+                    case "7":
+                        if (tailX - 1 < 0) {
+                            // Can't move left
+                            return -1;
+                        }
+                        tailX--;
+                        tailEntry = Direction.Right;
+                        break;
+                    case "|":
+                        if (tailY-1 < 0) {
+                            // Can't move up
+                            return -1;
+                        }
+                        tailY--;
+                        tailEntry = Direction.Down;
+                        break;
                     default:
                         return -1;
                 }
+                break;
+            case Up:
+                if (!validMove(Direction.Up, tailS)) {
+                    System.out.println("Wrong Tail char going: Up - " + tailS);
+                    return -1;
+                }
+                switch (tailS) {
+                    case "L":
+                        if (board.get(tailY).size() == tailX + 1) {
+                            // Can't move right
+                            return -1;
+                        }
+                        tailX++;
+                        tailEntry = Direction.Left;
+                        break;
+                    case "J":
+                        if (tailX - 1 < 0) {
+                            // Can't move left
+                            return -1;
+                        }
+                        tailX--;
+                        tailEntry = Direction.Right;
+                        break;
+                    case "|":
+                        if (tailY + 1 == board.size()) {
+                            // Can't move down
+                            return -1;
+                        }
+                        tailY++;
+                        tailEntry = Direction.Up;
+                        break;
+                    default:
+                        return -1;
+                }
+                break;
+            case Right:
+                if (!validMove(Direction.Right, tailS)) {
+                    System.out.println("Wrong Tail char going: Right - " + tailS);
+                    return -1;
+                }
+                switch (tailS) {
+                    case "L":
+                        if (tailY-1 < 0) {
+                            // Can't move up
+                            return -1;
+                        }
+                        tailY--;
+                        tailEntry = Direction.Down;
+                        break;
+                    case "F":
+                        if (tailY + 1 == board.size()) {
+                            // Can't move down
+                            return -1;
+                        }
+                        tailY++;
+                        tailEntry = Direction.Up;
+                        break;
+                    case "-":
+                        if (tailX - 1 < 0) {
+                            // Can't move left
+                            return -1;
+                        }
+                        tailX--;
+                        tailEntry = Direction.Right;
+                        break;
+                    default:
+                        return -1;
+                }
+                break;
+            case Left:
+                if (!validMove(Direction.Left, tailS)) {
+                    System.out.println("Wrong Tail char going: Left - " + tailS);
+                    return -1;
+                }
+                switch (tailS) {
+                    case "J":
+                        if (tailY-1 < 0) {
+                            // Can't move up
+                            return -1;
+                        }
+                        tailY--;
+                        tailEntry = Direction.Down;
+                        break;
+                    case "7":
+                        if (tailY + 1 == board.size()) {
+                            // Can't move down
+                            return -1;
+                        }
+                        tailY++;
+                        tailEntry = Direction.Up;
+                        break;
+                    case "-":
+                        if (board.get(tailY).size() == tailX + 1) {
+                            // Can't move right
+                            return -1;
+                        }
+                        tailX++;
+                        tailEntry = Direction.Left;
+                        break;
+                    default:
+                        return -1;
+                }
+                break;
         }
-        return count;
+        switch (headEntry) {
+            case Down:
+                if (!validMove(Direction.Down, headS)) {
+                    System.out.println("Wrong Head char going: Down - " + headS);
+                    return -1;
+                }
+                switch (headS) {
+                    case "F":
+                        if (board.get(headY).size() == headX + 1) {
+                            // Can't move right
+                            return -1;
+                        }
+                        headX++;
+                        headEntry = Direction.Left;
+                        break;
+                    case "7":
+                        if (headX - 1 < 0) {
+                            // Can't move left
+                            return -1;
+                        }
+                        headX--;
+                        headEntry = Direction.Right;
+                        break;
+                    case "|":
+                        if (headY-1 < 0) {
+                            // Can't move up
+                            return -1;
+                        }
+                        headY--;
+                        headEntry = Direction.Down;
+                        break;
+                    default:
+                        return -1;
+                }
+                break;
+            case Up:
+                if (!validMove(Direction.Up, headS)) {
+                    System.out.println("Wrong Head char going: Up - " + headS);
+                    return -1;
+                }
+                switch (headS) {
+                    case "L":
+                        if (board.get(headY).size() == headX + 1) {
+                            // Can't move right
+                            return -1;
+                        }
+                        headX++;
+                        headEntry = Direction.Left;
+                        break;
+                    case "J":
+                        if (headX - 1 < 0) {
+                            // Can't move left
+                            return -1;
+                        }
+                        headX--;
+                        headEntry = Direction.Right;
+                        break;
+                    case "|":
+                        if (headY + 1 == board.size()) {
+                            // Can't move down
+                            return -1;
+                        }
+                        headY++;
+                        headEntry = Direction.Up;
+                        break;
+                    default:
+                        return -1;
+                }
+                break;
+            case Right:
+                if (!validMove(Direction.Right, headS)) {
+                    System.out.println("Wrong Head char going: Right - " + headS);
+                    return -1;
+                }
+                switch (headS) {
+                    case "L":
+                        if (headY-1 < 0) {
+                            // Can't move up
+                            return -1;
+                        }
+                        headY--;
+                        headEntry = Direction.Down;
+                        break;
+                    case "F":
+                        if (headY + 1 == board.size()) {
+                            // Can't move down
+                            return -1;
+                        }
+                        headY++;
+                        headEntry = Direction.Up;
+                        break;
+                    case "-":
+                        if (headX - 1 < 0) {
+                            // Can't move left
+                            return -1;
+                        }
+                        headEntry = Direction.Right;
+                        headX--;
+                    default:
+                        return -1;
+                }
+                break;
+            case Left:
+                if (!validMove(Direction.Left, headS)) {
+                    System.out.println("Wrong Head char going: Left - " + headS);
+                    return -1;
+                }
+                switch (headS) {
+                    case "J":
+                        if (headY-1 < 0) {
+                            // Can't move up
+                            return -1;
+                        }
+                        headY--;
+                        headEntry = Direction.Down;
+                        break;
+                    case "7":
+                        if (headY + 1 == board.size()) {
+                            // Can't move down
+                            return -1;
+                        }
+                        headY++;
+                        headEntry = Direction.Up;
+                        break;
+                    case "-":
+                        if (board.get(headY).size() == headX + 1) {
+                            // Can't move right
+                            return -1;
+                        }
+                        headX++;
+                        headEntry = Direction.Left;
+                        break;
+                    default:
+                        return -1;
+                }
+                break;
+        }
+        return getLoopSize(headEntry, tailEntry, headY, headX, tailY, tailX, count);
     }
 }
