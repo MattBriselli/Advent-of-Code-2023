@@ -43,175 +43,92 @@ public class Day10 {
         }
 
         System.out.println("found the 'S' F at y:" + startingY + " x:" + startingX);
-        return getLoopSize(Direction.Up, startingY + 1, startingX, 0);
+        return getLoopSize(startingY + 1, startingX);
     }
 
-    private static boolean notValidMove(Direction direction, String s) {
-        return switch (direction) {
-            case Down -> !s.equals("F") && !s.equals("7") && !s.equals("|");
-            case Up -> !s.equals("L") && !s.equals("J") && !s.equals("|");
-            case Right -> !s.equals("L") && !s.equals("F") && !s.equals("-");
-            case Left -> !s.equals("J") && !s.equals("7") && !s.equals("-");
-        };
-    }
+    private static int getLoopSize(int y, int x) {
+        int count = 1;
+        int moveX = x;
+        int moveY = y;
+        // We're starting moving down from the initial F.
+        Direction dir = Direction.Up;
 
-    private static int getLoopSize(Direction entry, int y, int x, int count) {
-        count++;
+        while (moveY != startingY || moveX != startingX) {
+            String s = board.get(moveY).get(moveX);
+            count += 1;
 
-        if (y == startingY && x == startingX) {
-            // We did it!!! Break from the loop
-            return count / 2;
+            System.out.println("The count is: " + count + " we've got a " + s + " and we came from " + dir.toString());
+            switch (dir) {
+                case Down:
+                    switch (s) {
+                        case "F":
+                            moveX += 1;
+                            dir = Direction.Left;
+                            break;
+                        case "7":
+                            moveX -= 1;
+                            dir = Direction.Right;
+                            break;
+                        case "|":
+                            moveY--;
+                            break;
+                        default:
+                            return -1;
+                    }
+                    break;
+                case Up:
+                    switch (s) {
+                        case "L":
+                            moveX++;
+                            dir = Direction.Left;
+                            break;
+                        case "J":
+                            moveX--;
+                            dir = Direction.Right;
+                            break;
+                        case "|":
+                            moveY++;
+                            break;
+                        default:
+                            return -1;
+                    }
+                    break;
+                case Right:
+                    switch (s) {
+                        case "L":
+                            moveY--;
+                            dir = Direction.Down;
+                            break;
+                        case "F":
+                            moveY++;
+                            dir = Direction.Up;
+                            break;
+                        case "-":
+                            moveX--;
+                            break;
+                        default:
+                            return -1;
+                    }
+                    break;
+                case Left:
+                    switch (s) {
+                        case "J":
+                            moveY--;
+                            dir = Direction.Down;
+                            break;
+                        case "7":
+                            moveY++;
+                            dir = Direction.Up;
+                            break;
+                        case "-":
+                            moveX++;
+                            break;
+                        default:
+                            return -1;
+                    }
+                    break;
+            }
         }
-
-        String s = board.get(y).get(x);
-
-        System.out.println("The count is: " + count + " we've got a " + s + " and we came from " + entry.toString());
-        switch (entry) {
-            case Down:
-                if (notValidMove(Direction.Down, s)) {
-                    System.out.println("Wrong char going Tail: Down - " + s);
-                    return -1;
-                }
-                switch (s) {
-                    case "F":
-                        if (board.get(y).size() == x + 1) {
-                            // Can't move right
-                            System.out.println("Can't move further Right on the F");
-                            return -1;
-                        }
-                        x++;
-                        entry = Direction.Left;
-                        break;
-                    case "7":
-                        if (x - 1 < 0) {
-                            // Can't move left
-                            System.out.println("Can't move further Left on the 7");
-                            return -1;
-                        }
-                        x--;
-                        entry = Direction.Right;
-                        break;
-                    case "|":
-                        if (y-1 < 0) {
-                            // Can't move up
-                            System.out.println("Can't move further Up on the |");
-                            return -1;
-                        }
-                        y--;
-                        break;
-                    default:
-                        return -1;
-                }
-                break;
-            case Up:
-                if (notValidMove(Direction.Up, s)) {
-                    System.out.println("Wrong char going: Up - " + s);
-                    return -1;
-                }
-                switch (s) {
-                    case "L":
-                        if (board.get(y).size() == x + 1) {
-                            // Can't move right
-                            System.out.println("Can't move further Right on the L");
-                            return -1;
-                        }
-                        x++;
-                        entry = Direction.Left;
-                        break;
-                    case "J":
-                        if (x - 1 < 0) {
-                            // Can't move left
-                            System.out.println("Can't move further Left on the J");
-                            return -1;
-                        }
-                        x--;
-                        entry = Direction.Right;
-                        break;
-                    case "|":
-                        if (y + 1 == board.size()) {
-                            // Can't move down
-                            System.out.println("Can't move further Down on the |");
-                            return -1;
-                        }
-                        y++;
-                        break;
-                    default:
-                        return -1;
-                }
-                break;
-            case Right:
-                if (notValidMove(Direction.Right, s)) {
-                    System.out.println("Wrong char going: Right - " + s);
-                    return -1;
-                }
-                switch (s) {
-                    case "L":
-                        if (y-1 < 0) {
-                            // Can't move up
-                            System.out.println("Can't move further Up on the L");
-                            return -1;
-                        }
-                        y--;
-                        entry = Direction.Down;
-                        break;
-                    case "F":
-                        if (y + 1 == board.size()) {
-                            // Can't move down
-                            System.out.println("Can't move further Down on the F");
-                            return -1;
-                        }
-                        y++;
-                        entry = Direction.Up;
-                        break;
-                    case "-":
-                        if (x - 1 < 0) {
-                            // Can't move left
-                            System.out.println("Can't move further Left on the -");
-                            return -1;
-                        }
-                        x--;
-                        break;
-                    default:
-                        return -1;
-                }
-                break;
-            case Left:
-                if (notValidMove(Direction.Left, s)) {
-                    System.out.println("Wrong char going: Left - " + s);
-                    return -1;
-                }
-                switch (s) {
-                    case "J":
-                        if (y-1 < 0) {
-                            // Can't move up
-                            System.out.println("Can't move further Up on the J");
-                            return -1;
-                        }
-                        y--;
-                        entry = Direction.Down;
-                        break;
-                    case "7":
-                        if (y + 1 == board.size()) {
-                            // Can't move down
-                            System.out.println("Can't move further Down on the 7");
-                            return -1;
-                        }
-                        y++;
-                        entry = Direction.Up;
-                        break;
-                    case "-":
-                        if (board.get(y).size() == x + 1) {
-                            // Can't move right
-                            System.out.println("Can't move further Right on the -");
-                            return -1;
-                        }
-                        x++;
-                        break;
-                    default:
-                        return -1;
-                }
-                break;
-        }
-        return getLoopSize(entry, y, x, count);
+        return count / 2;
     }
 }
