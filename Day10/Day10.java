@@ -18,8 +18,8 @@ public class Day10 {
     private static final List<List<String>> board = new ArrayList<>();
 
     public static void main(String[] args) throws IOException {
-//        BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day10/List"));
-        BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day10/Test3"));
+        BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day10/List"));
+//        BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day10/Test3"));
 
         System.out.println("we're guessing: " + iterate(reader));
     }
@@ -32,7 +32,7 @@ public class Day10 {
         int startY = -1;
 
         while (line != null) {
-            System.out.println(line);
+//            System.out.println(line);
             if (line.contains("S")) {
                 startY = ticker;
                 startX = line.indexOf("S");
@@ -76,7 +76,7 @@ public class Day10 {
 
     private static int getLoopSize(Direction headEntry, Direction tailEntry, int headY, int headX, int tailY, int tailX, int count) {
         count++;
-        
+
         if (headY == tailY && headX == tailX) {
             // We did it!!! Break from the loop
             return count;
@@ -96,6 +96,7 @@ public class Day10 {
                     case "F":
                         if (board.get(tailY).size() == tailX + 1) {
                             // Can't move right
+                            System.out.println("Tail can't move further Right on the F");
                             return -1;
                         }
                         tailX++;
@@ -104,6 +105,7 @@ public class Day10 {
                     case "7":
                         if (tailX - 1 < 0) {
                             // Can't move left
+                            System.out.println("Tail can't move further Left on the 7");
                             return -1;
                         }
                         tailX--;
@@ -112,6 +114,7 @@ public class Day10 {
                     case "|":
                         if (tailY-1 < 0) {
                             // Can't move up
+                            System.out.println("Tail can't move further Up on the |");
                             return -1;
                         }
                         tailY--;
@@ -130,6 +133,7 @@ public class Day10 {
                     case "L":
                         if (board.get(tailY).size() == tailX + 1) {
                             // Can't move right
+                            System.out.println("Tail can't move further Right on the L");
                             return -1;
                         }
                         tailX++;
@@ -138,6 +142,7 @@ public class Day10 {
                     case "J":
                         if (tailX - 1 < 0) {
                             // Can't move left
+                            System.out.println("Tail can't move further Left on the J");
                             return -1;
                         }
                         tailX--;
@@ -146,6 +151,7 @@ public class Day10 {
                     case "|":
                         if (tailY + 1 == board.size()) {
                             // Can't move down
+                            System.out.println("Tail can't move further Down on the |");
                             return -1;
                         }
                         tailY++;
@@ -164,6 +170,7 @@ public class Day10 {
                     case "L":
                         if (tailY-1 < 0) {
                             // Can't move up
+                            System.out.println("Tail can't move further Up on the L");
                             return -1;
                         }
                         tailY--;
@@ -172,6 +179,7 @@ public class Day10 {
                     case "F":
                         if (tailY + 1 == board.size()) {
                             // Can't move down
+                            System.out.println("Tail can't move further Down on the F");
                             return -1;
                         }
                         tailY++;
@@ -180,6 +188,7 @@ public class Day10 {
                     case "-":
                         if (tailX - 1 < 0) {
                             // Can't move left
+                            System.out.println("Tail can't move further Left on the -");
                             return -1;
                         }
                         tailX--;
@@ -198,6 +207,7 @@ public class Day10 {
                     case "J":
                         if (tailY-1 < 0) {
                             // Can't move up
+                            System.out.println("Tail can't move further Up on the J");
                             return -1;
                         }
                         tailY--;
@@ -206,6 +216,7 @@ public class Day10 {
                     case "7":
                         if (tailY + 1 == board.size()) {
                             // Can't move down
+                            System.out.println("Tail can't move further Down on the 7");
                             return -1;
                         }
                         tailY++;
@@ -214,6 +225,7 @@ public class Day10 {
                     case "-":
                         if (board.get(tailY).size() == tailX + 1) {
                             // Can't move right
+                            System.out.println("Tail can't move further Right on the -");
                             return -1;
                         }
                         tailX++;
@@ -234,6 +246,7 @@ public class Day10 {
                     case "F":
                         if (board.get(headY).size() == headX + 1) {
                             // Can't move right
+                            System.out.println("Head can't move further Right on the F");
                             return -1;
                         }
                         headX++;
@@ -242,6 +255,7 @@ public class Day10 {
                     case "7":
                         if (headX - 1 < 0) {
                             // Can't move left
+                            System.out.println("Head can't move further Left on the 7");
                             return -1;
                         }
                         headX--;
@@ -250,6 +264,7 @@ public class Day10 {
                     case "|":
                         if (headY-1 < 0) {
                             // Can't move up
+                            System.out.println("Head can't move further Up on the |");
                             return -1;
                         }
                         headY--;
@@ -268,6 +283,7 @@ public class Day10 {
                     case "L":
                         if (board.get(headY).size() == headX + 1) {
                             // Can't move right
+                            System.out.println("Head can't move further Right on the L");
                             return -1;
                         }
                         headX++;
@@ -276,6 +292,7 @@ public class Day10 {
                     case "J":
                         if (headX - 1 < 0) {
                             // Can't move left
+                            System.out.println("Head can't move further Left on the J");
                             return -1;
                         }
                         headX--;
@@ -284,6 +301,7 @@ public class Day10 {
                     case "|":
                         if (headY + 1 == board.size()) {
                             // Can't move down
+                            System.out.println("Head can't move further Down on the |");
                             return -1;
                         }
                         headY++;
@@ -302,6 +320,7 @@ public class Day10 {
                     case "L":
                         if (headY-1 < 0) {
                             // Can't move up
+                            System.out.println("Head can't move further Up on the L");
                             return -1;
                         }
                         headY--;
@@ -310,6 +329,7 @@ public class Day10 {
                     case "F":
                         if (headY + 1 == board.size()) {
                             // Can't move down
+                            System.out.println("Head can't move further Down on the F");
                             return -1;
                         }
                         headY++;
@@ -318,10 +338,12 @@ public class Day10 {
                     case "-":
                         if (headX - 1 < 0) {
                             // Can't move left
+                            System.out.println("Head can't move further Left on the -");
                             return -1;
                         }
                         headEntry = Direction.Right;
                         headX--;
+                        break;
                     default:
                         return -1;
                 }
@@ -335,6 +357,7 @@ public class Day10 {
                     case "J":
                         if (headY-1 < 0) {
                             // Can't move up
+                            System.out.println("Head can't move further Up on the J");
                             return -1;
                         }
                         headY--;
