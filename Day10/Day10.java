@@ -47,30 +47,12 @@ public class Day10 {
     }
 
     private static boolean notValidMove(Direction direction, String s) {
-        switch (direction) {
-            case Down:
-                if (!s.equals("F") && !s.equals("7") && !s.equals("|")) {
-                    return true;
-                }
-                return false;
-            case Up:
-                if (!s.equals("L") && !s.equals("J") && !s.equals("|")) {
-                    System.out.println("Wrong char going: Down - " + s);
-                    return true;
-                }
-                return false;
-            case Right:
-                if (!s.equals("L") && !s.equals("F") && !s.equals("-")) {
-                    return true;
-                }
-                return false;
-            case Left:
-                if (!s.equals("J") && !s.equals("7") && !s.equals("-")) {
-                    return true;
-                }
-                return false;
-        }
-        return true;
+        return switch (direction) {
+            case Down -> !s.equals("F") && !s.equals("7") && !s.equals("|");
+            case Up -> !s.equals("L") && !s.equals("J") && !s.equals("|");
+            case Right -> !s.equals("L") && !s.equals("F") && !s.equals("-");
+            case Left -> !s.equals("J") && !s.equals("7") && !s.equals("-");
+        };
     }
 
     private static int getLoopSize(Direction entry, int y, int x, int count) {
