@@ -14,42 +14,11 @@ public class Day10 {
         Right
     }
 
-    static class Triple {
-        private boolean inPath;
-        private Direction dirOne;
-        private Direction dirTwo;
-
-        Triple(boolean inPath, Direction dirOne, Direction dirTwo) {
-            this.inPath = inPath;
-            this.dirOne = dirOne;
-            this.dirTwo = dirTwo;
-        }
-
-        public boolean isInPath() {
-            return inPath;
-        }
-
-        public boolean connects(Direction newDir) {
-            return switch (newDir) {
-                case Down -> dirOne == Direction.Up || dirTwo == Direction.Up;
-                case Up -> dirOne == Direction.Down || dirTwo == Direction.Down;
-                case Left -> dirOne == Direction.Right || dirTwo == Direction.Right;
-                case Right -> dirOne == Direction.Left || dirTwo == Direction.Left;
-            };
-        }
-
-        public Direction getDirTwo() {
-            return dirTwo;
-        }
-    }
-
 
     private static final List<List<String>> board = new ArrayList<>();
 
     private static int startingX = -1;
     private static int startingY = -1;
-
-    private static final List<List<Triple>> pathBoard = new ArrayList<>();
 
     public static void main(String[] args) throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day10/List"));
