@@ -32,7 +32,6 @@ public class Day10 {
         int startY = -1;
 
         while (line != null) {
-//            System.out.println(line);
             if (line.contains("S")) {
                 startY = ticker;
                 startX = line.indexOf("S");
@@ -47,31 +46,31 @@ public class Day10 {
         return getLoopSize(Direction.Up, Direction.Left,startY + 1, startX, startY, startX + 1, 0);
     }
 
-    private static boolean validMove(Direction direction, String s) {
+    private static boolean notValidMove(Direction direction, String s) {
         switch (direction) {
             case Down:
                 if (!s.equals("F") && !s.equals("7") && !s.equals("|")) {
-                    return false;
+                    return true;
                 }
-                return true;
+                return false;
             case Up:
                 if (!s.equals("L") && !s.equals("J") && !s.equals("|")) {
                     System.out.println("Wrong char going: Down - " + s);
-                    return false;
+                    return true;
                 }
-                return true;
+                return false;
             case Right:
                 if (!s.equals("L") && !s.equals("F") && !s.equals("-")) {
-                    return false;
+                    return true;
                 }
-                return true;
+                return false;
             case Left:
                 if (!s.equals("J") && !s.equals("7") && !s.equals("-")) {
-                    return false;
+                    return true;
                 }
-                return true;
+                return false;
         }
-        return false;
+        return true;
     }
 
     private static int getLoopSize(Direction headEntry, Direction tailEntry, int headY, int headX, int tailY, int tailX, int count) {
@@ -88,7 +87,7 @@ public class Day10 {
         System.out.println("The count is: " + count + " we've got a " + tailS + " Tail and we came from " + tailEntry.toString());
         switch (tailEntry) {
             case Down:
-                if (!validMove(Direction.Down, tailS)) {
+                if (notValidMove(Direction.Down, tailS)) {
                     System.out.println("Wrong Tail char going Tail: Down - " + tailS);
                     return -1;
                 }
@@ -118,14 +117,13 @@ public class Day10 {
                             return -1;
                         }
                         tailY--;
-                        tailEntry = Direction.Down;
                         break;
                     default:
                         return -1;
                 }
                 break;
             case Up:
-                if (!validMove(Direction.Up, tailS)) {
+                if (notValidMove(Direction.Up, tailS)) {
                     System.out.println("Wrong Tail char going: Up - " + tailS);
                     return -1;
                 }
@@ -155,14 +153,13 @@ public class Day10 {
                             return -1;
                         }
                         tailY++;
-                        tailEntry = Direction.Up;
                         break;
                     default:
                         return -1;
                 }
                 break;
             case Right:
-                if (!validMove(Direction.Right, tailS)) {
+                if (notValidMove(Direction.Right, tailS)) {
                     System.out.println("Wrong Tail char going: Right - " + tailS);
                     return -1;
                 }
@@ -192,14 +189,13 @@ public class Day10 {
                             return -1;
                         }
                         tailX--;
-                        tailEntry = Direction.Right;
                         break;
                     default:
                         return -1;
                 }
                 break;
             case Left:
-                if (!validMove(Direction.Left, tailS)) {
+                if (notValidMove(Direction.Left, tailS)) {
                     System.out.println("Wrong Tail char going: Left - " + tailS);
                     return -1;
                 }
@@ -229,7 +225,6 @@ public class Day10 {
                             return -1;
                         }
                         tailX++;
-                        tailEntry = Direction.Left;
                         break;
                     default:
                         return -1;
@@ -238,7 +233,7 @@ public class Day10 {
         }
         switch (headEntry) {
             case Down:
-                if (!validMove(Direction.Down, headS)) {
+                if (notValidMove(Direction.Down, headS)) {
                     System.out.println("Wrong Head char going: Down - " + headS);
                     return -1;
                 }
@@ -268,14 +263,13 @@ public class Day10 {
                             return -1;
                         }
                         headY--;
-                        headEntry = Direction.Down;
                         break;
                     default:
                         return -1;
                 }
                 break;
             case Up:
-                if (!validMove(Direction.Up, headS)) {
+                if (notValidMove(Direction.Up, headS)) {
                     System.out.println("Wrong Head char going: Up - " + headS);
                     return -1;
                 }
@@ -305,14 +299,13 @@ public class Day10 {
                             return -1;
                         }
                         headY++;
-                        headEntry = Direction.Up;
                         break;
                     default:
                         return -1;
                 }
                 break;
             case Right:
-                if (!validMove(Direction.Right, headS)) {
+                if (notValidMove(Direction.Right, headS)) {
                     System.out.println("Wrong Head char going: Right - " + headS);
                     return -1;
                 }
@@ -341,7 +334,6 @@ public class Day10 {
                             System.out.println("Head can't move further Left on the -");
                             return -1;
                         }
-                        headEntry = Direction.Right;
                         headX--;
                         break;
                     default:
@@ -349,7 +341,7 @@ public class Day10 {
                 }
                 break;
             case Left:
-                if (!validMove(Direction.Left, headS)) {
+                if (notValidMove(Direction.Left, headS)) {
                     System.out.println("Wrong Head char going: Left - " + headS);
                     return -1;
                 }
@@ -377,7 +369,6 @@ public class Day10 {
                             return -1;
                         }
                         headX++;
-                        headEntry = Direction.Left;
                         break;
                     default:
                         return -1;
