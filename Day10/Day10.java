@@ -16,12 +16,10 @@ public class Day10 {
 
 
     private static final List<List<String>> board = new ArrayList<>();
-    private static int startingX;
-    private static int startingY;
 
     public static void main(String[] args) throws IOException {
-//        BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day10/List"));
-        BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day10/Test"));
+        BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day10/List"));
+//        BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day10/Test2"));
 
         System.out.println("we're guessing: " + iterate(reader));
     }
@@ -43,14 +41,12 @@ public class Day10 {
         for (int i = 0; i < board.size(); i++) {
             for (int j = 0; j < board.get(i).size(); j++) {
                 String s = board.get(i).get(j);
-                if (s.equals("F")) {
+                if (s.equals("S")) {
                     // We're going to start going down, assuming we've found the top left corner of the maze (progressing left -> right, top -> down).
                     if (board.size() == i + 1) {
                         System.out.println("Can't go down :(");
                         break;
                     }
-                    startingY = i;
-                    startingX = j;
                     System.out.println("found an F at y:" + i + " x:" + j);
                     int loopSize = getLoopSize(board.get(i + 1).get(j), Direction.Up, i + 1, j, 0);
                     if (loopSize != -1) {
@@ -65,7 +61,7 @@ public class Day10 {
 
     private static int getLoopSize(String s, Direction entryDirection, int y, int x, int count) {
 //        System.out.println("StartingX is " + startingX + " and X is " + x + ". StartingY is " + startingY + " and Y is " + y);
-        if (y == startingY && x == startingX) {
+        if (s.equals("S")) {
             // We did it!!! Break from the loop
             System.out.println("total path length is: " + count);
             return (count + 1) / 2;
