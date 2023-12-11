@@ -10,6 +10,11 @@ public class Day11 {
     // Part one:
     // 8873506 - not right
 
+    // Part two:
+    // 82000210 - not right
+    // 82000292 - not right
+    // 177713698 - not right
+
     record Coord(int x, int y) { }
 
     private static final List<Coord> starList = new ArrayList<>();
@@ -19,8 +24,8 @@ public class Day11 {
     private static final List<List<String>> board = new ArrayList<>();
 
     public static void main(String[] args) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day11/List"));
-//        BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day11/Test"));
+//        BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day11/List"));
+        BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day11/Test"));
 
         System.out.println("we're guessing: " + iterate(reader));
     }
@@ -64,8 +69,6 @@ public class Day11 {
             }
         }
 
-        System.out.println("Size post" + board.size() + " : " + board.get(0).size());
-
         for (int i = 0; i < starList.size(); i++) {
             for (int j = i + 1; j < starList.size(); j++) {
                 Coord first = starList.get(i);
@@ -90,7 +93,7 @@ public class Day11 {
                     }
                 }
 
-                sum += Math.abs(second.y - first.y) + Math.abs(second.x - first.x) + addY + addX;
+                sum += Math.abs(second.y - first.y) + Math.abs(second.x - first.x) + (addY * (1000000)) + (addX  * (1000000));
             }
         }
 
