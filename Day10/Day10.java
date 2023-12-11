@@ -77,14 +77,22 @@ public class Day10 {
     private static boolean escapable(int y, int x) {
         if (y < 0 || x < 0 || y >= board.size() || x >= board.get(0).size()) {
             // Fell out of the bounding box
+            tileBoard.get(y).put(x, Tile.Not_Squeezable);
             return false;
         }
         Tile tile = tileBoard.get(y).get(x);
         if (tileBoard.get(y).containsKey(x) && (tile == Tile.In_Path || tile == Tile.Not_Squeezable)) {
             // Obviously not squeezable.
+            tileBoard.get(y).put(x, Tile.Not_Squeezable);
             return false;
         }
+        if (y == 0 || x == 0 || x == board.get(0).size() -1 || y == board.size()) {
+            // We're on a boundary!!!
+            tileBoard.get(y).put(x, Tile.Squeezable);
+            return true;
+        }
 
+        // TODO: ensure that we haven't already looked at each of these first {@code tileBoard}
         boolean topLeftUp = squeezable(Direction.Up, y-1, x-1);
         boolean topLeftLeft = squeezable(Direction.Left, y-1, x-1);
         boolean top = squeezable(Direction.Up, y-1, x);
@@ -105,12 +113,22 @@ public class Day10 {
     private static boolean squeezable(Direction dir, int y, int x) {
         if (y < 0 || x < 0 || y >= board.size() || x >= board.get(0).size()) {
             // Fell out of the bounding box
+            tileBoard.get(y).put(x, Tile.Not_Squeezable);
             return false;
         }
         Tile tile = tileBoard.get(y).get(x);
         if (tileBoard.get(y).containsKey(x) && (tile == Tile.In_Path || tile == Tile.Not_Squeezable)) {
             // Obviously not squeezable.
+            tileBoard.get(y).put(x, Tile.Not_Squeezable);
             return false;
+        }
+        if (y == 0 || x == 0 || x == board.get(0).size() -1 || y == board.size()) {
+            // We're on a boundary!!!
+            tileBoard.get(y).put(x, Tile.Squeezable);
+            return true;
+        }
+        if (tileBoard.get(y).get(x) == Tile.Squeezable) {
+            return true;
         }
 
         String down = (y+1 == board.size()) ? "" : board.get(y+1).get(x);
