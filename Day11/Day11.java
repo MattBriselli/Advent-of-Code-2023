@@ -3,7 +3,10 @@ package main.java.org.adventofcode2023.Day11;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.*;
+
+import static java.math.BigInteger.*;
 
 public class Day11 {
 
@@ -32,9 +35,9 @@ public class Day11 {
         System.out.println("we're guessing: " + iterate(reader));
     }
 
-    private static int iterate(BufferedReader reader) throws IOException {
+    private static BigInteger iterate(BufferedReader reader) throws IOException {
         String line = reader.readLine();
-        int sum = 0;
+        BigInteger sum = valueOf(0);
         int ticker = 0;
 
         while (line != null) {
@@ -80,22 +83,26 @@ public class Day11 {
                 int higherY = Math.max(second.y, first.y);
                 int lowerX = Math.min(second.x, first.x);
                 int higherX = Math.max(second.x, first.x);
-                int addY = 0;
-                int addX = 0;
+                BigInteger addY = valueOf(0);
+                BigInteger addX = valueOf(0);
 
                 for (int iNext = lowerY; iNext <= higherY; iNext++) {
                     if (blankRows.contains(iNext)) {
-                        addY++;
+                        addY = addY.add(ONE);
                     }
                 }
 
                 for (int iNext = lowerX; iNext <= higherX; iNext++) {
                     if (blankCols.contains(iNext)) {
-                        addX++;
+                        addX = addX.add(ONE);
                     }
                 }
 
-                sum += (higherY - lowerY) + (higherX - lowerX) + (addY * (1000000-1)) + (addX  * (1000000-1));
+                BigInteger diffTotal = BigInteger.valueOf(higherY - lowerY).add(BigInteger.valueOf(higherX - lowerX));
+                diffTotal = diffTotal.add(addY.multiply(BigInteger.valueOf(1000000 - 1)));
+                diffTotal = diffTotal.add(addX.multiply(BigInteger.valueOf(1000000 - 1)));
+
+                sum = sum.add(diffTotal);
             }
         }
 
