@@ -18,8 +18,6 @@ public class DayX {
         int sum = 0;
 
         while (line != null) {
-            // do stuff
-
             System.out.println(line);
 
             line = reader.readLine();
