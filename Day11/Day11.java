@@ -13,7 +13,9 @@ public class Day11 {
     // Part two:
     // 82000210 - not right
     // 82000292 - not right
+    // 177077874 - not right
     // 177713698 - not right
+    // 178349522 - not right (it was 1M +1, just wondering...)
 
     record Coord(int x, int y) { }
 
@@ -24,8 +26,8 @@ public class Day11 {
     private static final List<List<String>> board = new ArrayList<>();
 
     public static void main(String[] args) throws IOException {
-//        BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day11/List"));
-        BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day11/Test"));
+        BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day11/List"));
+//        BufferedReader reader = new BufferedReader(new FileReader("/Users/M/IdeaProjects/Advent of Code 2023/src/main/java/org/adventofcode2023/Day11/Test"));
 
         System.out.println("we're guessing: " + iterate(reader));
     }
@@ -93,7 +95,7 @@ public class Day11 {
                     }
                 }
 
-                sum += Math.abs(second.y - first.y) + Math.abs(second.x - first.x) + (addY * (1000000)) + (addX  * (1000000));
+                sum += (higherY - lowerY) + (higherX - lowerX) + (addY * (1000000-1)) + (addX  * (1000000-1));
             }
         }
 
